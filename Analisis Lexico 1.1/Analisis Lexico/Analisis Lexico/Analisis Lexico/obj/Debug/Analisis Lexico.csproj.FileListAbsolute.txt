@@ -1,0 +1,16 @@
+C:\Users\leyva\OneDrive\Desktop\C#\Analisis Lexico\Analisis Lexico\bin\Debug\Analisis Lexico.exe.config
+C:\Users\leyva\OneDrive\Desktop\C#\Analisis Lexico\Analisis Lexico\bin\Debug\Analisis Lexico.exe
+C:\Users\leyva\OneDrive\Desktop\C#\Analisis Lexico\Analisis Lexico\bin\Debug\Analisis Lexico.pdb
+C:\Users\leyva\OneDrive\Desktop\C#\Analisis Lexico\Analisis Lexico\obj\Debug\Analisis Lexico.csproj.AssemblyReference.cache
+C:\Users\leyva\OneDrive\Desktop\C#\Analisis Lexico\Analisis Lexico\obj\Debug\Analisis Lexico.csproj.CoreCompileInputs.cache
+C:\Users\leyva\OneDrive\Desktop\C#\Analisis Lexico\Analisis Lexico\obj\Debug\Analisis Lexico.exe
+C:\Users\leyva\OneDrive\Desktop\C#\Analisis Lexico\Analisis Lexico\obj\Debug\Analisis Lexico.pdb
+C:\Users\leyva\OneDrive\Desktop\C#\Analisis Lexico\Analisis Lexico\obj\Debug\Analisis Lexico.exe.config
+C:\Users\darkn\Downloads\Analisis Lexico\Analisis Lexico\Analisis Lexico\bin\Debug\Analisis Lexico.exe.config
+C:\Users\darkn\Downloads\Analisis Lexico\Analisis Lexico\Analisis Lexico\bin\Debug\Analisis Lexico.exe
+C:\Users\darkn\Downloads\Analisis Lexico\Analisis Lexico\Analisis Lexico\bin\Debug\Analisis Lexico.pdb
+C:\Users\darkn\Downloads\Analisis Lexico\Analisis Lexico\Analisis Lexico\obj\Debug\Analisis Lexico.csproj.AssemblyReference.cache
+C:\Users\darkn\Downloads\Analisis Lexico\Analisis Lexico\Analisis Lexico\obj\Debug\Analisis Lexico.exe.config
+C:\Users\darkn\Downloads\Analisis Lexico\Analisis Lexico\Analisis Lexico\obj\Debug\Analisis Lexico.csproj.CoreCompileInputs.cache
+C:\Users\darkn\Downloads\Analisis Lexico\Analisis Lexico\Analisis Lexico\obj\Debug\Analisis Lexico.exe
+C:\Users\darkn\Downloads\Analisis Lexico\Analisis Lexico\Analisis Lexico\obj\Debug\Analisis Lexico.pdb
