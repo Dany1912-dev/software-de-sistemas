@@ -1,0 +1,20 @@
+entero x = 10;
+entero y = 5;
+doble resultado = 3.14;
+
+leer(x);
+leer(y);
+
+si (x > y) entonces
+    entero suma = x + y;
+    escribir("El mayor es x y la suma es: " & suma);
+sino
+    escribir("Y es mayor o igual que X");
+fin
+
+mientras (x > 0)
+    x = x - 1;
+    escribir("x vale: " & x);
+fin
+
+escribir("Fin del programa"); 
