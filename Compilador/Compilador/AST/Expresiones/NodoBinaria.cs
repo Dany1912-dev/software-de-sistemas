@@ -1,4 +1,4 @@
-﻿namespace Compilador.AST.Expresiones
+namespace Compilador.AST.Expresiones
 {
     public class NodoBinaria : NodoAST
     {
@@ -6,7 +6,8 @@
         public NodoAST Izquierdo { get; }
         public NodoAST Derecho { get; }
 
-        public NodoBinaria(string operador, NodoAST izquierdo, NodoAST derecho)
+        public NodoBinaria(string operador, NodoAST izquierdo, NodoAST derecho, int linea, int columna)
+            : base(linea, columna)
         {
             Operador = operador;
             Izquierdo = izquierdo;

@@ -1,6 +1,7 @@
-﻿using Compilador.Lexico;
+using Compilador.Lexico;
 using Compilador.Tokens;
 using Compilador.Sintactico;
+using Compilador.Semantico;
 using Compilador.Utilidades;
 
 Impresora.Separador();
@@ -46,6 +47,23 @@ else
 
     if (arbol != null)
     {
+        Impresora.Separador();
+        Console.WriteLine("\n====== ANALISIS SEMANTICO ======");
+
+        var semantico = new AnalizadorSemantico();
+        var errores = semantico.Analizar(arbol);
+
+        if (errores.Count > 0)
+        {
+            Console.WriteLine($"  {errores.Count} error(es) semantico(s):");
+            foreach (var error in errores)
+                Console.WriteLine($"    {error}");
+        }
+        else
+        {
+            Console.WriteLine("  Analisis semantico correcto");
+        }
+
         Impresora.Separador();
         Console.WriteLine("\n====== AST - PREORDEN ======");
         ImpresoraAST.ImprimirPreorden(arbol);

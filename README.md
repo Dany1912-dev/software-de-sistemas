@@ -1,20 +1,21 @@
-# Compilador - Analizador Léxico, Sintáctico y AST
+# Compilador - Analizador Léxico, Sintáctico, Semántico y AST
 
-Compilador desarrollado en C# (.NET 9) que analiza código fuente escrito en un lenguaje de programación en español. Incluye análisis léxico, análisis sintáctico y generación de un Árbol de Sintaxis Abstracta (AST).
+Compilador desarrollado en C# (.NET 9) que analiza código fuente escrito en un lenguaje de programación en español. Incluye análisis léxico, análisis sintáctico, análisis semántico y generación de un Árbol de Sintaxis Abstracta (AST).
 
 ## Qué hace
 
-El programa lee un archivo `Programa.txt`, lo procesa en tres fases y muestra los resultados en consola:
+El programa lee un archivo `Programa.txt`, lo procesa en cuatro fases y muestra los resultados en consola:
 
 1. **Análisis Léxico** — Convierte el código fuente en una lista de tokens (palabras clave, identificadores, operadores, literales, etc.)
 2. **Análisis Sintáctico** — Valida que la secuencia de tokens cumpla con las reglas gramaticales del lenguaje
-3. **Generación del AST** — Construye un árbol que representa la estructura del programa y lo imprime en preorden, inorden, postorden y formato visual
+3. **Análisis Semántico** — Verifica reglas de tipos, declaraciones y ámbitos recorriendo el AST
+4. **Generación del AST** — Construye un árbol que representa la estructura del programa y lo imprime en preorden, inorden, postorden y formato visual
 
 ## Estructura del proyecto
 
 ```
 Compilador/
-├── Program.cs                          # Punto de entrada - orquesta las 3 fases
+├── Program.cs                          # Punto de entrada - orquesta las 4 fases
 ├── Compilador.csproj
 │
 ├── Tokens/
@@ -32,6 +33,12 @@ Compilador/
 │   ├── AnalizadorSintactico.cs         # Estado del parser y helpers (Avanzar, Consumir, etc.)
 │   ├── Expresiones.cs                  # Factor, Término, Expresión Aritmética y Relacional
 │   └── Sentencias.cs                   # Declaración, Asignación, Si, Mientras, Leer, Escribir
+│
+├── Semantico/
+│   ├── AnalizadorSemantico.cs          # Visitante que recorre el AST y aplica reglas semánticas
+│   ├── TablaSimbolos.cs                # Tabla de símbolos con ámbitos anidados (pila de scopes)
+│   ├── Simbolo.cs                      # Representa una variable: nombre, tipo, línea
+│   └── TipoDato.cs                     # Enum con los tipos del lenguaje (Entero, Doble, etc.)
 │
 ├── AST/
 │   ├── NodoAST.cs                      # Clase base abstracta para todos los nodos
@@ -137,7 +144,18 @@ Usa un parser de **descenso recursivo** que recorre la lista de tokens y valida 
 - Se detiene al primer error y reporta la línea donde ocurre
 - Solo se ejecuta si no hay errores léxicos
 
-### Fase 3: Árbol de Sintaxis Abstracta (AST)
+### Fase 3: Análisis Semántico
+
+El analizador semántico recorre el AST con un patrón **visitante** y aplica reglas de tipo, declaración y ámbito. Reporta todos los errores encontrados de una sola pasada (no se detiene al primero).
+
+- **Tabla de símbolos con ámbitos anidados**: cada bloque `si`/`sino`/`mientras` abre un nuevo ámbito. Las variables declaradas dentro solo existen en ese bloque.
+- **Variables declaradas antes de uso**: cualquier identificador en una expresión, asignación o `leer()` debe estar declarado.
+- **Detección de duplicados**: declarar dos variables con el mismo nombre en el mismo ámbito es error. Se permite *shadowing* en ámbitos anidados.
+- **Verificación de tipos en operadores**: `+`, `-`, `*`, `/` solo sobre `entero`/`doble`; `==`, `!=`, `<`, `>`, `<=`, `>=` solo entre tipos comparables.
+- **Compatibilidad de tipos**: en inicializaciones y asignaciones se verifica que el tipo de la expresión coincida con el de la variable. Se permite promoción `entero → doble`.
+- **Condiciones booleanas**: la condición de `si` y `mientras` debe ser de tipo `booleano`.
+
+### Fase 4: Árbol de Sintaxis Abstracta (AST)
 
 El parser construye un árbol donde cada nodo representa una construcción del lenguaje. El árbol se imprime en 4 formatos:
 

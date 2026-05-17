@@ -1,4 +1,4 @@
-﻿using Compilador.Tokens;
+using Compilador.Tokens;
 using Compilador.AST;
 using Compilador.AST.Expresiones;
 using Compilador.AST.Sentencias;
@@ -13,6 +13,8 @@ namespace Compilador.Sintactico
             if (_hayError) return null;
 
             string tipo = _actual.Lexema;
+            int linea = _actual.Linea;
+            int columna = _actual.Columna;
             Avanzar(); // consume el tipo
 
             string nombre = _actual.Lexema;
@@ -26,7 +28,7 @@ namespace Compilador.Sintactico
                 valor = ExpresionAritmetica();
             }
 
-            return new NodoDeclaracion(tipo, nombre, valor);
+            return new NodoDeclaracion(tipo, nombre, valor, linea, columna);
         }
 
         private NodoAST? Asignacion()
@@ -34,17 +36,21 @@ namespace Compilador.Sintactico
             if (_hayError) return null;
 
             string nombre = _actual.Lexema;
+            int linea = _actual.Linea;
+            int columna = _actual.Columna;
             Consumir(TipoToken.IDENTIFICADOR);
             Consumir(TipoToken.OP_ASIGNACION);
             var valor = ExpresionAritmetica();
 
-            return new NodoAsignacion(nombre, valor!);
+            return new NodoAsignacion(nombre, valor!, linea, columna);
         }
 
         private NodoAST? Lectura()
         {
             if (_hayError) return null;
 
+            int linea = _actual.Linea;
+            int columna = _actual.Columna;
             Consumir(TipoToken.LEER);
             Consumir(TipoToken.PARENTESIS_IZQ);
 
@@ -52,13 +58,15 @@ namespace Compilador.Sintactico
             Consumir(TipoToken.IDENTIFICADOR);
             Consumir(TipoToken.PARENTESIS_DER);
 
-            return new NodoLeer(nombre);
+            return new NodoLeer(nombre, linea, columna);
         }
 
         private NodoAST? Escritura()
         {
             if (_hayError) return null;
 
+            int linea = _actual.Linea;
+            int columna = _actual.Columna;
             Consumir(TipoToken.ESCRIBIR);
             Consumir(TipoToken.PARENTESIS_IZQ);
 
@@ -66,12 +74,12 @@ namespace Compilador.Sintactico
 
             if (Coincide(TipoToken.IDENTIFICADOR))
             {
-                valores.Add(new NodoIdentificador(_actual.Lexema));
+                valores.Add(new NodoIdentificador(_actual.Lexema, _actual.Linea, _actual.Columna));
                 Avanzar();
             }
             else if (Coincide(TipoToken.LITERAL_CADENA))
             {
-                valores.Add(new NodoCadena(_actual.Lexema));
+                valores.Add(new NodoCadena(_actual.Lexema, _actual.Linea, _actual.Columna));
                 Avanzar();
             }
             else
@@ -86,22 +94,22 @@ namespace Compilador.Sintactico
 
                 if (Coincide(TipoToken.IDENTIFICADOR))
                 {
-                    valores.Add(new NodoIdentificador(_actual.Lexema));
+                    valores.Add(new NodoIdentificador(_actual.Lexema, _actual.Linea, _actual.Columna));
                     Avanzar();
                 }
                 else if (Coincide(TipoToken.LITERAL_CADENA))
                 {
-                    valores.Add(new NodoCadena(_actual.Lexema));
+                    valores.Add(new NodoCadena(_actual.Lexema, _actual.Linea, _actual.Columna));
                     Avanzar();
                 }
                 else if (Coincide(TipoToken.LITERAL_ENTERO))
                 {
-                    valores.Add(new NodoNumero(int.Parse(_actual.Lexema)));
+                    valores.Add(new NodoNumero(int.Parse(_actual.Lexema), _actual.Linea, _actual.Columna));
                     Avanzar();
                 }
                 else if (Coincide(TipoToken.LITERAL_DECIMAL))
                 {
-                    valores.Add(new NodoDecimal(double.Parse(_actual.Lexema, System.Globalization.CultureInfo.InvariantCulture)));
+                    valores.Add(new NodoDecimal(double.Parse(_actual.Lexema, System.Globalization.CultureInfo.InvariantCulture), _actual.Linea, _actual.Columna));
                     Avanzar();
                 }
                 else
@@ -113,11 +121,13 @@ namespace Compilador.Sintactico
 
             Consumir(TipoToken.PARENTESIS_DER);
 
-            return new NodoEscribir(valores);
+            return new NodoEscribir(valores, linea, columna);
         }
 
         private NodoAST? IfSimple()
         {
+            int linea = _actual.Linea;
+            int columna = _actual.Columna;
             Consumir(TipoToken.SI);
             Consumir(TipoToken.PARENTESIS_IZQ);
             var condicion = ExpresionRelacional();
@@ -126,11 +136,13 @@ namespace Compilador.Sintactico
             var entonces = ListaSentencias();
             Consumir(TipoToken.FIN);
 
-            return new NodoSi(condicion!, entonces);
+            return new NodoSi(condicion!, entonces, linea, columna);
         }
 
         private NodoAST? IfExtendido()
         {
+            int linea = _actual.Linea;
+            int columna = _actual.Columna;
             Consumir(TipoToken.SI);
             Consumir(TipoToken.PARENTESIS_IZQ);
             var condicion = ExpresionRelacional();
@@ -141,11 +153,13 @@ namespace Compilador.Sintactico
             var sino = ListaSentencias();
             Consumir(TipoToken.FIN);
 
-            return new NodoSi(condicion!, entonces, sino);
+            return new NodoSi(condicion!, entonces, linea, columna, sino);
         }
 
         private NodoAST? Ciclo()
         {
+            int linea = _actual.Linea;
+            int columna = _actual.Columna;
             Consumir(TipoToken.MIENTRAS);
             Consumir(TipoToken.PARENTESIS_IZQ);
             var condicion = ExpresionRelacional();
@@ -153,7 +167,7 @@ namespace Compilador.Sintactico
             var cuerpo = ListaSentencias();
             Consumir(TipoToken.FIN);
 
-            return new NodoMientras(condicion!, cuerpo);
+            return new NodoMientras(condicion!, cuerpo, linea, columna);
         }
 
         private NodoAST? SentenciaControl()

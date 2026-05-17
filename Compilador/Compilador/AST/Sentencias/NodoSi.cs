@@ -1,4 +1,4 @@
-﻿namespace Compilador.AST.Sentencias
+namespace Compilador.AST.Sentencias
 {
     public class NodoSi : NodoAST
     {
@@ -6,7 +6,8 @@
         public List<NodoAST> Entonces { get; }
         public List<NodoAST>? Sino { get; }
 
-        public NodoSi(NodoAST condicion, List<NodoAST> entonces, List<NodoAST>? sino = null)
+        public NodoSi(NodoAST condicion, List<NodoAST> entonces, int linea, int columna, List<NodoAST>? sino = null)
+            : base(linea, columna)
         {
             Condicion = condicion;
             Entonces = entonces;

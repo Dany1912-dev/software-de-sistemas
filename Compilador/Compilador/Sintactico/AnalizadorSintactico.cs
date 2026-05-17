@@ -98,7 +98,7 @@ namespace Compilador.Sintactico
             }
 
             Console.WriteLine("  Sintaxis correcta");
-            return new NodoPrograma(sentencias);
+            return new NodoPrograma(sentencias, 1, 1);
         }
     }
 }
