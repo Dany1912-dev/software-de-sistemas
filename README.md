@@ -1,101 +1,72 @@
-# Compilador - Analizador Léxico, Sintáctico, Semántico y AST
+# Compilador — Analizador Léxico, Sintáctico y Semántico
 
-Compilador desarrollado en C# (.NET 9) que analiza código fuente escrito en un lenguaje de programación en español. Incluye análisis léxico, análisis sintáctico, análisis semántico y generación de un Árbol de Sintaxis Abstracta (AST).
+Compilador de front-end desarrollado en **C# (.NET 9)** para un lenguaje de programación con sintaxis en español. Implementa el pipeline de análisis completo hasta la fase semántica, incluyendo la construcción y recorrido del Árbol de Sintaxis Abstracta (AST).
 
-## Qué hace
+![.NET](https://img.shields.io/badge/.NET-9.0-512BD4?logo=dotnet&logoColor=white)
+![C#](https://img.shields.io/badge/C%23-13-239120?logo=csharp&logoColor=white)
+![Estado](https://img.shields.io/badge/fase_alcanzada-semántica-blue)
 
-El programa lee un archivo `Programa.txt`, lo procesa en cuatro fases y muestra los resultados en consola:
+---
 
-1. **Análisis Léxico** — Convierte el código fuente en una lista de tokens (palabras clave, identificadores, operadores, literales, etc.)
-2. **Análisis Sintáctico** — Valida que la secuencia de tokens cumpla con las reglas gramaticales del lenguaje
-3. **Análisis Semántico** — Verifica reglas de tipos, declaraciones y ámbitos recorriendo el AST
-4. **Generación del AST** — Construye un árbol que representa la estructura del programa y lo imprime en preorden, inorden, postorden y formato visual
+## Alcance del proyecto
 
-## Estructura del proyecto
+Este compilador cubre las fases de **análisis** del pipeline clásico de compilación. La generación de código intermedio y las fases posteriores quedan fuera del alcance actual.
 
-```
-Compilador/
-├── Program.cs                          # Punto de entrada - orquesta las 4 fases
-├── Compilador.csproj
-│
-├── Tokens/
-│   ├── TipoToken.cs                    # Enum con todos los tipos de token
-│   └── Token.cs                        # Record inmutable (Lexema, Tipo, Valor, Linea, Columna)
-│
-├── Lexico/
-│   ├── AnalizadorLexico.cs             # Orquestador: recorre el código y delega a los lectores
-│   ├── LectorIdentificador.cs          # Lee identificadores y palabras reservadas
-│   ├── LectorNumero.cs                 # Lee literales enteros y decimales
-│   ├── LectorCadena.cs                 # Lee cadenas entre comillas dobles
-│   └── LectorSimbolo.cs               # Lee operadores y delimitadores
-│
-├── Sintactico/
-│   ├── AnalizadorSintactico.cs         # Estado del parser y helpers (Avanzar, Consumir, etc.)
-│   ├── Expresiones.cs                  # Factor, Término, Expresión Aritmética y Relacional
-│   └── Sentencias.cs                   # Declaración, Asignación, Si, Mientras, Leer, Escribir
-│
-├── Semantico/
-│   ├── AnalizadorSemantico.cs          # Visitante que recorre el AST y aplica reglas semánticas
-│   ├── TablaSimbolos.cs                # Tabla de símbolos con ámbitos anidados (pila de scopes)
-│   ├── Simbolo.cs                      # Representa una variable: nombre, tipo, línea
-│   └── TipoDato.cs                     # Enum con los tipos del lenguaje (Entero, Doble, etc.)
-│
-├── AST/
-│   ├── NodoAST.cs                      # Clase base abstracta para todos los nodos
-│   ├── Expresiones/
-│   │   ├── NodoNumero.cs               # Literal entero (5, 10)
-│   │   ├── NodoDecimal.cs              # Literal decimal (3.14)
-│   │   ├── NodoCadena.cs               # Literal cadena ("hola")
-│   │   ├── NodoBooleano.cs             # verdadero / falso
-│   │   ├── NodoIdentificador.cs        # Variable (x, suma)
-│   │   ├── NodoBinaria.cs              # Operación con dos operandos (x + y, a > b)
-│   │   └── NodoUnaria.cs               # Operación con un operando
-│   └── Sentencias/
-│       ├── NodoPrograma.cs             # Nodo raíz con la lista de sentencias
-│       ├── NodoDeclaracion.cs          # entero x = 5
-│       ├── NodoAsignacion.cs           # x = 10
-│       ├── NodoSi.cs                   # si/entonces/fin y si/entonces/sino/fin
-│       ├── NodoMientras.cs             # mientras (cond) ... fin
-│       ├── NodoLeer.cs                 # leer(x)
-│       └── NodoEscribir.cs             # escribir("hola" & x)
-│
-├── Utilidades/
-│   ├── PalabrasReservadas.cs           # Diccionario de palabras reservadas y validación
-│   ├── Impresora.cs                    # Impresión de tokens y resumen
-│   └── ImpresoraAST.cs                 # Impresión del AST (preorden, inorden, postorden, visual)
-│
-└── Datos/
-    └── Programa.txt                    # Archivo de entrada con el código a analizar
-```
+| Fase | Estado |
+|------|--------|
+| Análisis Léxico | ✅ Implementado |
+| Análisis Sintáctico | ✅ Implementado |
+| Generación del AST | ✅ Implementado |
+| Análisis Semántico | ✅ Implementado |
+| Código Intermedio | ❌ No implementado |
+| Optimización | ❌ No implementado |
+| Generación de código | ❌ No implementado |
 
-## El lenguaje soportado
+---
+
+## ¿Qué hace?
+
+El compilador lee un archivo `Programa.txt` con código fuente en el lenguaje definido, lo procesa fase por fase y muestra los resultados en consola:
+
+1. **Análisis Léxico** — Tokeniza el código fuente carácter por carácter: palabras clave, identificadores, literales, operadores y delimitadores.
+2. **Análisis Sintáctico** — Valida la gramática con un parser de descenso recursivo y construye el AST al mismo tiempo.
+3. **Análisis Semántico** — Recorre el AST con el patrón Visitante y aplica reglas de tipos, declaraciones y ámbitos.
+4. **Recorridos del AST** — Imprime el árbol en preorden, inorden, postorden y formato visual con conectores.
+
+---
+
+## El lenguaje
+
+Un lenguaje imperativo sencillo con palabras clave en español.
 
 ### Palabras reservadas
 
-`si`, `entonces`, `sino`, `fin`, `mientras`, `entero`, `caracter`, `boleano`, `doble`, `verdadero`, `falso`, `leer`, `escribir`
-
-### Tipos de dato
-
-- `entero` — números enteros
-- `doble` — números decimales
-- `caracter` — caracteres
-- `boleano` — verdadero o falso
+| Categoría | Palabras |
+|-----------|----------|
+| Tipos de dato | `entero`, `doble`, `caracter`, `boleano` |
+| Control de flujo | `si`, `entonces`, `sino`, `fin`, `mientras` |
+| Entrada / Salida | `leer`, `escribir` |
+| Literales booleanos | `verdadero`, `falso` |
 
 ### Operadores
 
-- Aritméticos: `+`, `-`, `*`, `/`
-- Relacionales: `==`, `!=`, `<`, `>`, `<=`, `>=`
-- Asignación: `=`
-- Concatenación: `&`
+| Tipo | Operadores |
+|------|------------|
+| Aritméticos | `+`  `-`  `*`  `/` |
+| Relacionales | `==`  `!=`  `<`  `>`  `<=`  `>=` |
+| Asignación | `=` |
+| Concatenación de cadenas | `&` |
 
-### Estructuras de control
+### Sintaxis del lenguaje
 
 ```
-// Declaración con inicialización opcional
+// Declaración e inicialización
 entero x = 10;
+doble pi = 3.14;
+boleano activo = verdadero;
 
 // Asignación
-x = 5;
+x = x + 1;
 
 // Condicional simple
 si (x > 0) entonces
@@ -106,63 +77,139 @@ fin
 si (x > y) entonces
     escribir("x es mayor");
 sino
-    escribir("y es mayor");
+    escribir("y es mayor o igual");
 fin
 
-// Ciclo
+// Ciclo mientras
 mientras (x > 0)
     x = x - 1;
 fin
 
-// Entrada/Salida
+// Entrada y salida
 leer(x);
 escribir("El valor es: " & x);
+
+// Comentario de línea
+// Esto es un comentario
 ```
 
-### Comentarios
+---
+
+## Arquitectura del proyecto
 
 ```
-// Esto es un comentario de línea
+Compilador/
+├── Program.cs                          # Punto de entrada — orquesta todas las fases
+├── Compilador.csproj
+│
+├── Tokens/
+│   ├── TipoToken.cs                    # Enum con todos los tipos de token posibles
+│   └── Token.cs                        # Record inmutable (Lexema, Tipo, Valor, Línea, Columna)
+│
+├── Lexico/
+│   ├── AnalizadorLexico.cs             # Orquestador: recorre el código y delega a los lectores
+│   ├── LectorIdentificador.cs          # Lee identificadores y palabras reservadas
+│   ├── LectorNumero.cs                 # Lee literales enteros y decimales
+│   ├── LectorCadena.cs                 # Lee cadenas entre comillas dobles
+│   └── LectorSimbolo.cs               # Lee operadores simples y compuestos
+│
+├── Sintactico/
+│   ├── AnalizadorSintactico.cs         # Estado del parser y métodos auxiliares (Avanzar, Consumir...)
+│   ├── Expresiones.cs                  # Factor, Término, Expresión Aritmética y Relacional
+│   └── Sentencias.cs                   # Declaración, Asignación, Si, Mientras, Leer, Escribir
+│
+├── Semantico/
+│   ├── AnalizadorSemantico.cs          # Visitante que recorre el AST y aplica reglas semánticas
+│   ├── TablaSimbolos.cs                # Tabla de símbolos con ámbitos anidados (pila de scopes)
+│   ├── Simbolo.cs                      # Representa una variable: nombre, tipo, línea de declaración
+│   └── TipoDato.cs                     # Enum con los tipos del lenguaje (Entero, Doble, etc.)
+│
+├── AST/
+│   ├── NodoAST.cs                      # Clase base abstracta para todos los nodos
+│   ├── Expresiones/
+│   │   ├── NodoNumero.cs               # Literal entero (5, 10)
+│   │   ├── NodoDecimal.cs              # Literal decimal (3.14)
+│   │   ├── NodoCadena.cs               # Literal cadena ("hola")
+│   │   ├── NodoBooleano.cs             # verdadero / falso
+│   │   ├── NodoIdentificador.cs        # Variable (x, suma)
+│   │   ├── NodoBinaria.cs              # Operación binaria (x + y, a > b)
+│   │   └── NodoUnaria.cs               # Operación unaria (-x)
+│   └── Sentencias/
+│       ├── NodoPrograma.cs             # Nodo raíz — lista de sentencias del programa
+│       ├── NodoDeclaracion.cs          # entero x = 5
+│       ├── NodoAsignacion.cs           # x = 10
+│       ├── NodoSi.cs                   # si/entonces/fin  y  si/entonces/sino/fin
+│       ├── NodoMientras.cs             # mientras (cond) ... fin
+│       ├── NodoLeer.cs                 # leer(x)
+│       └── NodoEscribir.cs             # escribir("hola" & x)
+│
+├── Utilidades/
+│   ├── PalabrasReservadas.cs           # Diccionario de palabras reservadas y validación
+│   ├── Impresora.cs                    # Impresión de tokens y resumen en consola
+│   └── ImpresoraAST.cs                 # Recorridos del AST (preorden, inorden, postorden, visual)
+│
+└── Datos/
+    └── Programa.txt                    # Archivo de entrada con el código a analizar
 ```
+
+---
 
 ## Cómo funciona cada fase
 
-### Fase 1: Análisis Léxico
+### Fase 1 — Análisis Léxico
 
-El analizador léxico recorre el código fuente carácter por carácter y lo convierte en tokens. Cada token tiene un tipo, un lexema (texto original), la línea y columna donde aparece.
+El `AnalizadorLexico` recorre el código fuente carácter por carácter y produce una secuencia de `Token`. Cada token registra su tipo, lexema original, valor procesado, línea y columna.
 
 - Salta espacios en blanco y comentarios `//`
-- Delega a lectores especializados según el carácter: letras → `LectorIdentificador`, dígitos → `LectorNumero`, comilla → `LectorCadena`, símbolos → `LectorSimbolo`
-- Los identificadores se comparan contra el diccionario de palabras reservadas
-- Los caracteres no reconocidos se marcan como `TOKEN_ERROR`
+- Delega la lectura a un lector especializado según el primer carácter:
+  - Letra → `LectorIdentificador` (reconoce palabras reservadas automáticamente)
+  - Dígito → `LectorNumero` (soporta enteros y decimales)
+  - `"` → `LectorCadena`
+  - Símbolo → `LectorSimbolo` (operadores simples y compuestos como `<=`, `==`)
+- Los caracteres no reconocidos producen un `TOKEN_ERROR` con línea y columna exactas
 
-### Fase 2: Análisis Sintáctico
+### Fase 2 — Análisis Sintáctico
 
-Usa un parser de **descenso recursivo** que recorre la lista de tokens y valida la gramática.
+Parser de **descenso recursivo** que valida la gramática y construye el AST simultáneamente.
 
-- Expresiones con precedencia correcta: Factor → Término → Expresión Aritmética → Expresión Relacional
-- Se detiene al primer error y reporta la línea donde ocurre
-- Solo se ejecuta si no hay errores léxicos
+Jerarquía de precedencia (de menor a mayor):
 
-### Fase 3: Análisis Semántico
+```
+Expresión Relacional  →  ExprAritmética  (== | != | < | > | <= | >=)  ExprAritmética
+Expresión Aritmética  →  Término  (+ | -)  Término
+Término               →  Factor  (* | /)  Factor
+Factor                →  número | decimal | cadena | booleano | identificador | ( Expresión )
+```
 
-El analizador semántico recorre el AST con un patrón **visitante** y aplica reglas de tipo, declaración y ámbito. Reporta todos los errores encontrados de una sola pasada (no se detiene al primero).
+- Solo se ejecuta si no hubo errores léxicos
+- Ante el primer error sintáctico reporta la línea y se detiene
 
-- **Tabla de símbolos con ámbitos anidados**: cada bloque `si`/`sino`/`mientras` abre un nuevo ámbito. Las variables declaradas dentro solo existen en ese bloque.
-- **Variables declaradas antes de uso**: cualquier identificador en una expresión, asignación o `leer()` debe estar declarado.
-- **Detección de duplicados**: declarar dos variables con el mismo nombre en el mismo ámbito es error. Se permite *shadowing* en ámbitos anidados.
-- **Verificación de tipos en operadores**: `+`, `-`, `*`, `/` solo sobre `entero`/`doble`; `==`, `!=`, `<`, `>`, `<=`, `>=` solo entre tipos comparables.
-- **Compatibilidad de tipos**: en inicializaciones y asignaciones se verifica que el tipo de la expresión coincida con el de la variable. Se permite promoción `entero → doble`.
-- **Condiciones booleanas**: la condición de `si` y `mientras` debe ser de tipo `booleano`.
+### Fase 3 — Análisis Semántico
 
-### Fase 4: Árbol de Sintaxis Abstracta (AST)
+El `AnalizadorSemantico` implementa el patrón **Visitante** sobre el AST. Recorre el árbol completo y acumula todos los errores antes de reportarlos (no se detiene al primero).
 
-El parser construye un árbol donde cada nodo representa una construcción del lenguaje. El árbol se imprime en 4 formatos:
+Reglas que verifica:
 
-- **Preorden** — Operador primero, luego hijos
-- **Inorden** — Hijo izquierdo, operador, hijo derecho
-- **Postorden** — Hijos primero, operador al final
-- **Visual** — Formato de árbol con indentación y conectores
+- **Declaración antes de uso** — cualquier identificador en una expresión, asignación o `leer()` debe existir en la tabla de símbolos.
+- **Sin redeclaración en el mismo ámbito** — dos variables con el mismo nombre en el mismo bloque son error. El *shadowing* en ámbitos anidados está permitido.
+- **Compatibilidad de tipos** — en inicializaciones y asignaciones el tipo de la expresión debe coincidir con el de la variable. Se permite la promoción implícita `entero → doble`.
+- **Operadores aritméticos** — solo sobre `entero` o `doble`.
+- **Operadores relacionales** — solo entre tipos comparables.
+- **Condiciones booleanas** — la condición de `si` y `mientras` debe resolverse como `boleano`.
+- **Ámbitos anidados** — cada bloque `si` / `sino` / `mientras` abre un nuevo scope. Las variables declaradas dentro no son visibles fuera de ese bloque.
+
+### Fase 4 — Árbol de Sintaxis Abstracta (AST)
+
+El AST se construye durante el análisis sintáctico. La `ImpresoraAST` lo recorre en cuatro formatos:
+
+| Recorrido | Descripción |
+|-----------|-------------|
+| **Preorden** | Nodo raíz → subárbol izquierdo → subárbol derecho |
+| **Inorden** | Subárbol izquierdo → nodo raíz → subárbol derecho |
+| **Postorden** | Subárbol izquierdo → subárbol derecho → nodo raíz |
+| **Visual** | Árbol con indentación y conectores `├──` / `└──` |
+
+---
 
 ## Ejemplo
 
@@ -171,43 +218,83 @@ Dado este `Programa.txt`:
 ```
 entero x = 10;
 entero y = 5;
+doble resultado = 3.14;
 si (x > y) entonces
     escribir("x es mayor");
 sino
-    escribir("y es mayor");
+    escribir("y es mayor o igual");
+fin
+mientras (x > 0)
+    x = x - 1;
 fin
 ```
 
-La salida del árbol visual sería:
+Fragmento de la salida en consola:
 
 ```
+====== ANALIZADOR LEXICO ======
+Tokens encontrados: 40
+
+====== ANALISIS SEMANTICO ======
+  Analisis semantico correcto
+
+====== AST - ARBOL VISUAL ======
 Programa
 ├── Declarar entero x
 │   └── 10
 ├── Declarar entero y
 │   └── 5
-└── Si
+├── Declarar doble resultado
+│   └── 3.14
+├── Si
+│   ├── Condicion
+│   │   └── >
+│   │       ├── x
+│   │       └── y
+│   ├── Entonces
+│   │   └── Escribir
+│   │       └── "x es mayor"
+│   └── Sino
+│       └── Escribir
+│           └── "y es mayor o igual"
+└── Mientras
     ├── Condicion
     │   └── >
     │       ├── x
-    │       └── y
-    ├── Entonces
-    │   └── Escribir
-    │       └── "x es mayor"
-    └── Sino
-        └── Escribir
-            └── "y es mayor"
+    │       └── 0
+    └── Cuerpo
+        └── Asignar x
+            └── -
+                ├── x
+                └── 1
 ```
+
+---
 
 ## Requisitos
 
-- .NET 9.0 SDK
+- [.NET 9.0 SDK](https://dotnet.microsoft.com/download/dotnet/9.0)
 
-## Ejecución
+## Cómo ejecutar
 
-1. Coloca tu código fuente en `Datos/Programa.txt`
-2. Ejecuta el proyecto:
+1. Escribe el programa a analizar en `Compilador/Compilador/Datos/Programa.txt`
+2. Desde la raíz del repositorio:
 
 ```bash
-dotnet run
+dotnet run --project Compilador/Compilador
 ```
+
+O abre `Compilador/Compilador.slnx` en Visual Studio / Rider y ejecuta con **F5**.
+
+---
+
+## Tecnologías y decisiones de diseño
+
+| Aspecto | Decisión |
+|---------|----------|
+| Lenguaje | C# 13 con .NET 9 |
+| Estrategia de parsing | Descenso recursivo manual |
+| Recorrido del AST | Patrón Visitante |
+| Tabla de símbolos | Pila de scopes para ámbitos anidados |
+| Reporte de errores | Semántico: acumula todos los errores; Sintáctico: falla rápido |
+| Tokens | Records inmutables con información de posición |
